@@ -1,16 +1,7 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
-
-
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-
-
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.codecs.pojo.annotations.BsonId;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.*;
 
 import java.util.ArrayList;
