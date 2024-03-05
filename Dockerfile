@@ -10,8 +10,10 @@ COPY mvnw pom.xml ./
 # Copy the Maven configuration directory (.mvn/) from the host machine to the /app/.mvn directory inside the Docker container
 COPY .mvn/ .mvn
 
+RUN chmod +x ./mvnw
+
 # Download project dependencies and store them locally in the Docker container
-RUN ./mvnw dependency:go-offline
+RUN ./mvnw dependency:resolve
 
 # Copy the source code of the application from the host machine to the /app/src directory inside the Docker container
 COPY ./src ./src
