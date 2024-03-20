@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public class UserDetail implements UserDetails {
-    User user;
+    private User user;
 
     public UserDetail(User user) {
         this.user=user;
@@ -18,25 +18,22 @@ public class UserDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return authorities;
     }
 
 
 
-    public List<Role> getRoles() {
-        return user.getRoles();
+    public Role getRole() {
+        return user.getRole();
     }
 
-    public void setRoles(List<Role> roles) {
-        this.user.setRoles(roles);
+    public void setRole(Role role) {
+        this.user.setRole(role);
     }
 
-    public void addRole(Role role) {
-        this.user.getRoles().add(role);
-    }
+
+
     @Override
     public String getPassword() {
         return user.getPassword();

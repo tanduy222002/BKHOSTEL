@@ -65,47 +65,39 @@ public class AuthService {
             refreshTokenService.generateRefreshToken(user);
             System.out.println(user);
         }
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        String role = userDetails.getAuthorities().toString();
         return new AuthResponse(
                 user.getId().toString(),
                 jwt,
-                roles,
+                role,
                 user.getRefreshToken().getToken(),
                 "Create successfully");
     }
 
     @Transactional
-    public AuthResponse signUp(String userName, String password, List<String> roles){
+    public AuthResponse signUp(String userName, String password, String email, String phone){
         if (userRepository.existsByUserName(userName)){
             throw new UserNameExistsException("Username already exists");
         }
-        User user =new User(userName, encoder.encode(password));
+        User user =new User(userName, encoder.encode(password),email,phone);
 
 
-        if(roles==null){
-            roles =Arrays.asList("ROLE_USER");
-        }
-        checkValidRole(roles);
-        for(String role : roles){
-            Optional<Role> optionalValue = Optional.ofNullable(roleRepository.findByName(role));
-            Role result = optionalValue.orElseGet(()->{
-                Role newRole = new Role(role);
-                roleRepository.save(newRole);
-                return newRole;
+        String role = "ROLE_USER";
+        Optional<Role> optionalValue = Optional.ofNullable(roleRepository.findByName(role));
+        Role result = optionalValue.orElseGet(()->{
+            Role newRole = new Role(role);
+            roleRepository.save(newRole);
+            return newRole;
             });
 
-            user.addRole(result);
-        }
+        user.addRole(result);
         System.out.println("before save user: "+user);
         user=userRepository.save(user);
         System.out.println("after save user:" +user);
-        List<Role> rolesCopy = new ArrayList<>(user.getRoles());
-        for (Role role : rolesCopy) {
-            role.addUser(user);
-            roleRepository.save(role);
-        }
+
+        result.addUser(user);
+        roleRepository.save(result);
+
         System.out.println("generate token");
         String jwt = jwtTokenService.generateToken(user);
         System.out.println("generated refresh token");
@@ -113,7 +105,7 @@ public class AuthService {
         System.out.println("after generated refresh token");
         return new AuthResponse(user.getId().toString()
                 ,jwt
-                ,roles,
+                ,result.getName(),
                 refreshToken.getToken(),
                 "Signup successfully");
 

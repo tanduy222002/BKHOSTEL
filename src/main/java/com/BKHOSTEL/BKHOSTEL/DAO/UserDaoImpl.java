@@ -23,6 +23,11 @@ public class UserDaoImpl implements UserDao{
     public User save(User user) {
         mongoTemplate.save(user);
         return user;
+    }
 
+    public User getUserProfileById(String userId) {
+        Query query = new Query(Criteria.where("_id").is(userId));
+        query.fields().include("name", "userName","email","phone","avatar","fullName","role");
+        return mongoTemplate.findOne(query, User.class);
     }
 }

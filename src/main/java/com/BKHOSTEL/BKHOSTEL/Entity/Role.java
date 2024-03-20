@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class Role {
 
 
     @DocumentReference(lazy = true)
+    @JsonBackReference
     private List<User> users;
 
     public void addUser(User user) {

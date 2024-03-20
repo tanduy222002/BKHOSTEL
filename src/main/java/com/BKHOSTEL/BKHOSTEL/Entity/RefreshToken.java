@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class RefreshToken {
 
     @Id
     private String id;
+    @JsonBackReference
     @DocumentReference(lazy = true)
     private User user;
     private String token;

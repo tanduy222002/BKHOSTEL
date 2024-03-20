@@ -13,11 +13,11 @@ import java.util.List;
 public class AuthRequest {
     @NotBlank(message = "user name is mandatory")
     @Schema( example = "tanduy222002@gmail.com", required = true)
-    private String userName;
+    private String username;
     @NotBlank(message = "password is mandatory")
     @Schema( example = "Tdt@01263655736", required = true)
     @StrongPassword
     private String password;
-    private List<String> roles;
+
 
 }

@@ -34,12 +34,12 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         SecretKey key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes());
-        List<Role> roles = userDetails.getRoles();
+        String role = userDetails.getRole().getName();
         // Tạo chuỗi json web token từ username của user.
         return Jwts.builder()
                 .setSubject(userDetails.getUser().getUserName())
                 .setIssuedAt(now)
-                .claim("roles", roles)
+                .claim("role", role)
                 .setExpiration(expiryDate)
                 .signWith(key)
                 .compact();

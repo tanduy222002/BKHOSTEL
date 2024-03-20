@@ -1,4 +1,5 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -36,10 +37,15 @@ public class User {
 
     private String facebook;
 
-    @DocumentReference(lazy = true)
-    private List<Role> roles;
+    private String fullName;
 
+    private String avatar;
 
+    @DocumentReference(lazy = false)
+    @JsonManagedReference
+    private Role role;
+
+    @JsonManagedReference
     @DocumentReference(lazy = false)
     private RefreshToken refreshToken;
 
@@ -49,22 +55,17 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password) {
+    public User(String userName, String password, String email, String phone) {
         System.out.println("user role constructor called");
         this.userName = userName;
         this.password = password;
+        this.email = email;
+        this.phone = phone;
     }
 
 
     public void addRole(Role role) {
-        if (this.roles == null) {
-            System.out.println(this.roles);
-            System.out.println("this.roles ==null");
-            this.roles = new ArrayList<Role>();
-            this.roles.add(role);
-        } else {
-            this.roles.add(role);
-        }
+       this.role=role;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", balance=" + balance +
                 ", facebook='" + facebook + '\'' +
-                ", roles=" + roles +
+                ", roles=" + role +
                 ", refreshToken=" + refreshToken +
 
                 '}';

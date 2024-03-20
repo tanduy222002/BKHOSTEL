@@ -36,15 +36,13 @@ public class JwtTokenService {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         SecretKey key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes());
-        List<String> roles = user.getRoles()
-                .stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
+        String role = user.getRole().getName();
+
         // Tạo chuỗi json web token từ username của user.
         return Jwts.builder()
                 .setSubject(user.getUserName())
                 .setIssuedAt(now)
-                .claim("roles", roles)
+                .claim("role", role)
                 .setExpiration(expiryDate)
                 .signWith(key)
                 .compact();
