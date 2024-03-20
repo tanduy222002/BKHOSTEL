@@ -31,7 +31,7 @@ RUN ./mvnw clean install
 # COPY ${JAR_FILE} app.jar
 # ENTRYPOINT ["java","-jar","app.jar"]
 
-Set the working directory in the container
+#Set the working directory in the container
 WORKDIR /app
 
 # Copy the built JAR file from the builder stage to the current directory in the container
