@@ -71,9 +71,10 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          workload_identity_provider: projects/364547968872/locations/global/workloadIdentityPools/github-actions-cloud-run/subject/SUBJECT_ATTRIBUTE_VALUE 
+          workload_identity_provider: projects/364547968872/locations/global/workloadIdentityPools/github-action/providers/github-action 
+
        # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
-          service_account: github-actions@applied-oxygen-416003.iam.gserviceaccount.com # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+          service_account: github-build-deploy-cloudrun@applied-oxygen-416003.iam.gserviceaccount.com # e.g. - my-service-account@my-project.iam.gserviceaccount.com
 
       # NOTE: Alternative option - authentication via credentials json
       # - name: Google Auth
