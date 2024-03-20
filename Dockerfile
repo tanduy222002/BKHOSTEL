@@ -1,4 +1,4 @@
-Use a base image with JDK and Maven installed
+#Use a base image with JDK and Maven installed
 FROM eclipse-temurin:17-jdk-focal AS builder
 
 # Set the working directory in the container
