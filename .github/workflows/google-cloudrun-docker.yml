@@ -53,7 +53,7 @@ env:
   GAR_LOCATION: us-central1 # TODO: update Artifact Registry location
   SERVICE: bkhostel # TODO: update Cloud Run service name
   REGION: us-central1 # TODO: update Cloud Run service region
-  REPOSITORY: bkhostel
+  REPOSITORY: bkhostel-repository
 
 jobs:
   deploy:
