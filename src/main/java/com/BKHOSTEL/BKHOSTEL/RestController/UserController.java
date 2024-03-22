@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 
-@CrossOrigin
+
 @RestController
 @RequestMapping(value = "/users")
 @SecurityRequirement(name = "bearerAuth")

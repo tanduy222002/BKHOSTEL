@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(value ="/location")
-@CrossOrigin
+
 public class LocationController {
     private LocationService locationService;
 

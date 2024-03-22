@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "/auth")
-@CrossOrigin
+
 public class AuthController {
     private ImageService imageService;
     private LocationService locationService;
