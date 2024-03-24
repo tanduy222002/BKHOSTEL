@@ -5,6 +5,7 @@ import com.BKHOSTEL.BKHOSTEL.Exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.el.parser.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,15 @@ public class ExceptionHandler {
                     HttpStatus.BAD_REQUEST);
 
         }
+    @org.springframework.web.bind.annotation.ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleContrainViolationException(ConstraintViolationException e) {
+        return new ResponseEntity<>(new ErrorResponseDto(new Date(),
+                HttpStatus.BAD_REQUEST.toString(),
+                e.getMessage()),
+                HttpStatus.BAD_REQUEST);
+
+    }
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
@@ -134,6 +144,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleDefaultException(Exception e) {
+        System.out.println(e.getClass().getName());
             System.out.println(e.getMessage());
         return new ResponseEntity<>(new ErrorResponseDto(new Date(),HttpStatus.INTERNAL_SERVER_ERROR.toString(),e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
