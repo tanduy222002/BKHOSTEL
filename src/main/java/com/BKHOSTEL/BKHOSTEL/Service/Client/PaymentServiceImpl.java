@@ -53,7 +53,8 @@ public class PaymentServiceImpl implements PaymentService {
         }
         vnp_Params.put("vnp_ReturnUrl", VnpConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
+        Calendar cld = Calendar.getInstance();
+        cld.setTimeZone(TimeZone.getTimeZone("GMT+7"));
         System.out.println(cld.getTime());
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
