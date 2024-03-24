@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
 
+import com.BKHOSTEL.BKHOSTEL.Dto.ProcessPaymentResponseDto;
 import com.BKHOSTEL.BKHOSTEL.Service.Client.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ public class PaymentController {
     @GetMapping("")
     public ResponseEntity<?> doPaymentProcess(HttpServletRequest req, HttpServletResponse res, @RequestParam @Min(value = 10000,message = "So tien nap toi thieu 10000 vnd") int amount) throws Exception {
         String paymentUrl=paymentService.processPayment(req,res);
-        return ResponseEntity.status(302).header("Location", paymentUrl).build();
+        return ResponseEntity.ok(new ProcessPaymentResponseDto(paymentUrl));
 
 
     }
