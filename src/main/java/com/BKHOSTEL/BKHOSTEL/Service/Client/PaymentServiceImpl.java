@@ -16,6 +16,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -54,16 +57,20 @@ public class PaymentServiceImpl implements PaymentService {
         vnp_Params.put("vnp_ReturnUrl", VnpConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         Calendar cld = Calendar.getInstance();
-        cld.setTimeZone(TimeZone.getTimeZone("GMT+7"));
-        System.out.println(cld.getTime());
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
+        Date d = new Date();
+        System.out.println("crt: "+d.getTime());
+        SimpleDateFormat sdf1= new SimpleDateFormat("yyyyMMddHHmmss");
+        sdf1.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+        String vnp_CreateDate = sdf1.format(d);
+        System.out.println(vnp_CreateDate);
+//        cld.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+//        System.out.println(cld.getTime());
+//
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+//        String vnp_CreateDate = formatter.format(cld.getTime());
 
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
         cld.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
-        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
 
 //Build data to hash and querystring
