@@ -188,8 +188,13 @@ public class RechargeServiceImpl implements RechargeService {
         }else
             recharge.setStatus("FAILURE");
         User user=recharge.getUser();
+        if(user.getBalance()!=null){
         Double newBalance=user.getBalance()+(double)amount;
         user.setBalance(newBalance);
+        }
+        else{
+            user.setBalance((double)amount);
+        }
         rechargeDaoImpl.save(recharge);
         userDaoImpl.save(user);
     }
