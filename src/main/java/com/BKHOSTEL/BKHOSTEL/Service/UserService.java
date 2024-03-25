@@ -42,7 +42,7 @@ public class UserService {
         }
         return user;
     }
-    public User getUserByAuthContext(){
+    public static User getUserByAuthContext(){
         // Retrieve the authentication object from the SecurityContextHolder
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

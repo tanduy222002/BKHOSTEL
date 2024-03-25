@@ -84,7 +84,7 @@ public class WebSecurityConfig  {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/**","/v3/**","/location/**","/services/**","/payments/**").permitAll()
+                        auth.requestMatchers("/auth/**","/v3/**","/location/**","/services/**","/recharges/result","recharges/ipn_url").permitAll()
                                 .anyRequest().authenticated()
                 );
 

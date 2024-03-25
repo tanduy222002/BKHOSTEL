@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -20,6 +21,7 @@ public class User {
 
     private String name;
 
+
     private String userName;
 
     private String password;
@@ -30,7 +32,7 @@ public class User {
 
     private String email;
 
-    private Double balance;
+    private Double balance=0.0;
 
 
 
