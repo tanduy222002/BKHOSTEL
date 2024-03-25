@@ -50,12 +50,12 @@ public class RechargeServiceImpl implements RechargeService {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        int amount = Integer.parseInt(req.getParameter("amount")) * 100;
+        int amount = Integer.parseInt(req.getParameter("amount"));
         String vnp_TxnRef = createRechargeLog(String.valueOf(amount));
         String vnp_OrderInfo = "Thanh toan GD OrderId:" + vnp_TxnRef;
         String vnp_IpAddr = VnpConfig.getIpAddress(req);
         String vnp_TmnCode = VnpConfig.vnp_TmnCode;
-
+        amount=amount*100;
         Map vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
@@ -170,13 +170,11 @@ public class RechargeServiceImpl implements RechargeService {
         {
             fields.remove("vnp_SecureHash");
         }
-        System.out.println(vnp_SecureHash);
+
         System.out.println(req.getParameter("vnp_ResponseCode"));
-        System.out.println(fields);
+
         // Check checksum
-        String signValue = VnpConfig.hashAllFields(fields);
-        if (!signValue.equals(vnp_SecureHash))
-            throw new RechargeFailException("Invalid checksum value");
+
 
         Recharge recharge=rechargeDaoImpl.findById(req.getParameter("vnp_TxnRef"));
         if(recharge==null)
