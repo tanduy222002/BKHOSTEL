@@ -3,6 +3,7 @@ package com.BKHOSTEL.BKHOSTEL.DAO;
 import com.BKHOSTEL.BKHOSTEL.Entity.Recharge;
 import com.BKHOSTEL.BKHOSTEL.Entity.RentalService;
 import com.BKHOSTEL.BKHOSTEL.Entity.User;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,7 +36,7 @@ public class RechargeDaoImpl implements RechargeDao{
 
     @Override
     public List<Recharge> findAllSuccessRechargeOfUser(String userId) {
-        Query query = new Query(Criteria.where("user").is(userId).and("status").is("SUCCESS"));
+        Query query = new Query(Criteria.where("user").is(new ObjectId(userId)).and("status").is("SUCCESS"));
         return mongoTemplate.find(query, Recharge.class);
     }
 }

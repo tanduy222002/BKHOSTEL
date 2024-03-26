@@ -39,8 +39,9 @@ public class RechargeController {
 
     @ResponseBody
     @GetMapping("")
-    public ResponseEntity<?> getRechargeByUser(@PathVariable String userId) {
+    public ResponseEntity<?> getRechargeByUser(@RequestParam String userId) {
         List<Recharge> recharges= rechargeService.getRechargeByUser(userId);
+        System.out.println(recharges.get(0).getDate());
         return ResponseEntity.ok(recharges);
     }
 
