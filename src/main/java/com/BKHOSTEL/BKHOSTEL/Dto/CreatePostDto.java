@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreatePostDto {
         @NotBlank(message ="service type is mandatory ")
-        @JsonProperty("service_type")
+        @JsonProperty("service_id")
         private String serviceTypeId;
         @NotBlank(message ="post title is mandatory ")
         private String title;

@@ -1,12 +1,15 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
 
+import com.BKHOSTEL.BKHOSTEL.Anotation.ValidStatus;
 import com.BKHOSTEL.BKHOSTEL.Dto.ProcessPaymentResponseDto;
+import com.BKHOSTEL.BKHOSTEL.Dto.RechargePaginationDto;
 import com.BKHOSTEL.BKHOSTEL.Entity.Recharge;
 import com.BKHOSTEL.BKHOSTEL.Service.Client.ClientRechargeService;
 import com.BKHOSTEL.BKHOSTEL.Service.RechargeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +42,9 @@ public class RechargeController {
 
     @ResponseBody
     @GetMapping("")
-    public ResponseEntity<?> getRechargeByUser(@RequestParam String userId) {
-        List<Recharge> recharges= rechargeService.getRechargeByUser(userId);
-        System.out.println(recharges.get(0).getDate());
+    public ResponseEntity<?> getAllRecharges(@RequestParam(required = false) String userId,@RequestParam(required = false) String status,
+        @RequestParam(defaultValue = "5", required = false) int size, @RequestParam(defaultValue = "0",required = false) int pageIndex) {
+        RechargePaginationDto recharges= rechargeService.getAllRecharge(userId,status,size,pageIndex);
         return ResponseEntity.ok(recharges);
     }
 

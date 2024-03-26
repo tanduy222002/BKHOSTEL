@@ -34,6 +34,7 @@ public class Post {
     private User createdBy;
     @DocumentReference(lazy = true)
     private User approvedBy;
+    @DocumentReference(lazy = true)
     private RentalService serviceType;
     private Date createDate;
 

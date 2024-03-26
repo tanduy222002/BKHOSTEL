@@ -28,6 +28,6 @@ public class RentalServiceImpl implements RentalServiceDao{
     }
 
     public List<RentalService> getAllServices(){
-        return mongoTemplate.findAll(RentalService.class);
+        return mongoTemplate.findAll(RentalService.class,"service");
     }
 }

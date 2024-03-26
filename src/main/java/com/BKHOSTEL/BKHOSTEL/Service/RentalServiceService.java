@@ -21,6 +21,8 @@ public class RentalServiceService {
         return "new rental service added successfully";
     }
     public List<RentalService> getAllServices(){
-        return rentalServiceDaoImpl.getAllServices();
+        List<RentalService> list =rentalServiceDaoImpl.getAllServices();
+        System.out.println(list);
+        return list;
     }
 }

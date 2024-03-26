@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc
 @OpenAPIDefinition(servers = {@Server(url = "/", description = "Default Server URL")},info = @Info(title = "BKHOSTEL API", version = "v1"))
 @SecurityScheme(
         name = "bearerAuth",
