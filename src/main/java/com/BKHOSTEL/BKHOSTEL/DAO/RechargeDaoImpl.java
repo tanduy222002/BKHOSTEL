@@ -42,19 +42,20 @@ public class RechargeDaoImpl implements RechargeDao{
 
     @Override
     public RechargePaginationDto findAllSuccessRechargeOfUser(Map<String, Object> filterProps, int size, int pageIndex ) {
-        Pageable pageable = PageRequest.of(pageIndex,size);
-        Query query = new Query().with(pageable);
+        Pageable pageable = PageRequest.of(pageIndex-1,size);
+        Query query = new Query();
         filterProps.entrySet().stream()
                 .forEach(entry -> {
                     String key = entry.getKey();
                     Object value = entry.getValue();
                     query.addCriteria(Criteria.where(key).is(value));
                 });
-        long count=mongoTemplate.count(query, Recharge.class);
-        count=(long)Math.ceil(count/size);
+        double count=mongoTemplate.count(query, Recharge.class);
+        count= Math.ceil((double) count/size);
         RechargePaginationDto dto = new RechargePaginationDto();
+        query.with(pageable);
         dto.setRecharges(mongoTemplate.find(query, Recharge.class));
-        dto.setTotalPage(count);
+        dto.setTotalPage((long)count);
         dto.setCurrentPage(pageIndex);
         return dto;
     }

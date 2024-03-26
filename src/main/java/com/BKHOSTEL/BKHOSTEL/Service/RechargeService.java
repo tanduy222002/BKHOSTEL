@@ -35,4 +35,9 @@ public class RechargeService {
 
         return rechargeDaoImpl.findAllSuccessRechargeOfUser(map,size,pageIndex);
     }
+
+    public RechargePaginationDto getRechargeByUserId(String userId, String status, int size, int pageIndex) {
+        User user = UserService.getCurrentUserByAuthContextWithId(userId);
+        return getAllRecharge(userId,status,size,pageIndex);
+    }
 }

@@ -43,7 +43,8 @@ public class RechargeController {
     @ResponseBody
     @GetMapping("")
     public ResponseEntity<?> getAllRecharges(@RequestParam(required = false) String userId,@RequestParam(required = false) String status,
-        @RequestParam(defaultValue = "5", required = false) int size, @RequestParam(defaultValue = "0",required = false) int pageIndex) {
+                                             @Min(5) @RequestParam(defaultValue = "5", required = false) int size,
+                                             @Min(1) @RequestParam(defaultValue = "1",required = false) int pageIndex) {
         RechargePaginationDto recharges= rechargeService.getAllRecharge(userId,status,size,pageIndex);
         return ResponseEntity.ok(recharges);
     }
