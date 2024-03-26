@@ -34,7 +34,7 @@ public class User {
 
     private Double balance=0.0;
 
-
+    private String status="Active";
 
 
     private String facebook;

@@ -1,6 +1,7 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
 
 import com.BKHOSTEL.BKHOSTEL.Dto.PasswordChangeRequestDto;
+import com.BKHOSTEL.BKHOSTEL.Dto.UserBalanceDto;
 import com.BKHOSTEL.BKHOSTEL.Dto.UserProfileDto;
 import com.BKHOSTEL.BKHOSTEL.Service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,6 +32,12 @@ public class UserController {
     public ResponseEntity<?> getUserProfile(@PathVariable String userId) {
         UserProfileDto profile = new UserProfileDto(userService.getUserProfileById(userId));
         return ResponseEntity.ok(profile);
+    }
+
+    @GetMapping("/{userId}/balance")
+    public ResponseEntity<?> getUserBalance(@PathVariable String userId) {
+        UserBalanceDto balanceDto = new UserBalanceDto(userService.getUserBalance(userId));
+        return ResponseEntity.ok(balanceDto);
     }
 
     @PatchMapping("/{userId}/profile")

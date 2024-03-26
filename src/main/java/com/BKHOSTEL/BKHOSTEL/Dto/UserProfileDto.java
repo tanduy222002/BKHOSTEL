@@ -27,6 +27,8 @@ public class UserProfileDto {
 
     private String role;
 
+    private String status;
+
     public UserProfileDto(User user) {
         this.email=user.getEmail();
         this.name=user.getName();
@@ -34,5 +36,6 @@ public class UserProfileDto {
         this.phone=user.getPhone();
         this.fullName=user.getFullName();
         this.avatar=user.getAvatar();
+        this.status=user.getStatus();
     }
 }

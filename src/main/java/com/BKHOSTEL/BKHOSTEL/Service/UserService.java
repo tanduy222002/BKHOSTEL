@@ -34,13 +34,18 @@ public class UserService {
         this.imageService = imageService;
     }
 
-    public User getCurrentUserByAuthContextWithId(String Id){
+    public static User getCurrentUserByAuthContextWithId(String Id){
 
         User user= getUserByAuthContext();
         if(!user.getId().equals(Id)){
             throw new UserIdMisMatchException();
         }
         return user;
+    }
+
+    public double getUserBalance(String userId){
+        User user= getUserByAuthContext();
+        return user.getBalance();
     }
     public static User getUserByAuthContext(){
         // Retrieve the authentication object from the SecurityContextHolder

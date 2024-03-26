@@ -2,8 +2,10 @@ package com.BKHOSTEL.BKHOSTEL.Service;
 
 import com.BKHOSTEL.BKHOSTEL.Entity.User;
 import com.BKHOSTEL.BKHOSTEL.Entity.UserDetail;
+import com.BKHOSTEL.BKHOSTEL.Exception.UserNotFoundException;
 import com.BKHOSTEL.BKHOSTEL.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class UserDetailService implements UserDetailsService {
         // Kiểm tra xem user có tồn tại trong database không?
         User user = userRepository.findByUserName(userName);
         if (user == null) {
-            throw new UsernameNotFoundException("The user name is not found: "+userName);
+           throw new UserNotFoundException();
         }
         return new UserDetail(user);
     }

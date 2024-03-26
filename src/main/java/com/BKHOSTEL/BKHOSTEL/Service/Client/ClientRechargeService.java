@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-public interface RechargeService {
+public interface ClientRechargeService {
     public String processRecharge(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 
     public String rechargeReturnUrl(HttpServletRequest req, HttpServletResponse res);

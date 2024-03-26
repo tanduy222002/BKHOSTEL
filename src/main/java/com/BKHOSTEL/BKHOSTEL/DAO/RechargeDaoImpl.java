@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class RechargeDaoImpl implements RechargeDao{
     MongoTemplate mongoTemplate;
@@ -29,5 +31,11 @@ public class RechargeDaoImpl implements RechargeDao{
     @Override
     public Recharge findById(String id) {
         return mongoTemplate.findById(id, Recharge.class);
+    }
+
+    @Override
+    public List<Recharge> findAllSuccessRechargeOfUser(String userId) {
+        Query query = new Query(Criteria.where("user").is(userId).and("status").is("SUCCESS"));
+        return mongoTemplate.find(query, Recharge.class);
     }
 }

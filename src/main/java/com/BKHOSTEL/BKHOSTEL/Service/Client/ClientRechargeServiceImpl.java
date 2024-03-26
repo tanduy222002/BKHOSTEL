@@ -18,12 +18,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class RechargeServiceImpl implements RechargeService {
+public class ClientRechargeServiceImpl implements ClientRechargeService {
     private RechargeDao rechargeDaoImpl;
     private UserDao userDaoImpl;
 
     @Autowired
-    public RechargeServiceImpl(RechargeDao rechargeDaoImpl, UserDao userDaoImpl) {
+    public ClientRechargeServiceImpl(RechargeDao rechargeDaoImpl, UserDao userDaoImpl) {
         this.rechargeDaoImpl = rechargeDaoImpl;
         this.userDaoImpl = userDaoImpl;
     }

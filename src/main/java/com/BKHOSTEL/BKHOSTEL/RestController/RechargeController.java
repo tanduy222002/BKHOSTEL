@@ -1,7 +1,9 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
 
 import com.BKHOSTEL.BKHOSTEL.Dto.ProcessPaymentResponseDto;
-import com.BKHOSTEL.BKHOSTEL.Service.Client.RechargeService;
+import com.BKHOSTEL.BKHOSTEL.Entity.Recharge;
+import com.BKHOSTEL.BKHOSTEL.Service.Client.ClientRechargeService;
+import com.BKHOSTEL.BKHOSTEL.Service.RechargeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,34 +14,48 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(value = "/recharges")
 @Validated
 @SecurityRequirement(name = "bearerAuth")
 public class RechargeController {
+    private ClientRechargeService clientRechargeService;
     private RechargeService rechargeService;
 
     @Autowired
-    public RechargeController(RechargeService rechargeService) {
+    public RechargeController(ClientRechargeService clientRechargeService, RechargeService rechargeService) {
+        this.clientRechargeService = clientRechargeService;
         this.rechargeService = rechargeService;
     }
 
     @ResponseBody
-    @GetMapping("")
+    @GetMapping("/payment_url")
     public ResponseEntity<?> doPaymentProcess(HttpServletRequest req, HttpServletResponse res, @RequestParam @Min(value = 10000,message = "So tien nap toi thieu 10000 vnd") int amount) throws Exception {
-        String paymentUrl= rechargeService.processRecharge(req,res);
+        String paymentUrl= clientRechargeService.processRecharge(req,res);
         return ResponseEntity.ok(new ProcessPaymentResponseDto(paymentUrl));
     }
 
+    @ResponseBody
+    @GetMapping("")
+    public ResponseEntity<?> getRechargeByUser(@PathVariable String userId) {
+        List<Recharge> recharges= rechargeService.getRechargeByUser(userId);
+        return ResponseEntity.ok(recharges);
+    }
+
+
+
+
     @GetMapping("/result")
     public String doPaymentProcess(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        String resultHtmlPath = rechargeService.rechargeReturnUrl(req,res);
+        String resultHtmlPath = clientRechargeService.rechargeReturnUrl(req,res);
         return resultHtmlPath;
     }
 
     @GetMapping("/ipn_url")
     public void updateRechargeProcess(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        rechargeService.saveRecharge(req,res);
+        clientRechargeService.saveRecharge(req,res);
     }
 
 }

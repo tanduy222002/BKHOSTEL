@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Recharge {
     private String status;
 
     @DocumentReference(lazy = true)
+    @JsonIgnore
     User user;
 
     public Recharge(Date date, String amount, String description, String status, User user) {

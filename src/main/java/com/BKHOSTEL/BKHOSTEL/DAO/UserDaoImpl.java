@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao{
 
     public User getUserProfileById(String userId) {
         Query query = new Query(Criteria.where("_id").is(userId));
-        query.fields().include("name", "userName","email","phone","avatar","fullName","role");
+        query.fields().include("name", "userName","email","phone","avatar","fullName","role","status");
         return mongoTemplate.findOne(query, User.class);
     }
 }
