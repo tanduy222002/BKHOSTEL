@@ -44,12 +44,13 @@ public class User {
     private String avatar;
 
     @DocumentReference(lazy = false)
-    @JsonManagedReference
     private Role role;
 
-    @JsonManagedReference
     @DocumentReference(lazy = false)
     private RefreshToken refreshToken;
+
+    @DocumentReference(lazy = false)
+    private Otp otp;
 
 //    @Version
 //    private long version;
@@ -57,14 +58,14 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password, String email, String phone) {
-        System.out.println("user role constructor called");
-        this.userName = userName;
-        this.password = password;
-        this.email = email;
+    public User(String id, String name, String phone, String email) {
+        this.id = id;
+        this.name = name;
         this.phone = phone;
+        this.email = email;
+        this.balance=null;
+        this.status=null;
     }
-
 
     public void addRole(Role role) {
        this.role=role;

@@ -8,5 +8,9 @@ import org.springframework.data.mongodb.core.query.Query;
 public interface UserDao {
     public User getUserProfileById(String userId);
 
+    public void findAndDeleteUserById(String userId);
+
+    public User findById(String userId);
+    public User findByEmail(String email);
     public User save(User user);
 }

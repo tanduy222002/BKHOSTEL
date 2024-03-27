@@ -1,4 +1,5 @@
 package com.BKHOSTEL.BKHOSTEL.Service.Client;
+import com.BKHOSTEL.BKHOSTEL.Configuration.VnpConfig;
 import com.BKHOSTEL.BKHOSTEL.DAO.RechargeDao;
 import com.BKHOSTEL.BKHOSTEL.DAO.UserDao;
 import com.BKHOSTEL.BKHOSTEL.Entity.Recharge;

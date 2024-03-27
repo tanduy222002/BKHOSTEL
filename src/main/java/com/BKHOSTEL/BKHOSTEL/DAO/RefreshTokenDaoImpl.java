@@ -18,6 +18,7 @@ public class RefreshTokenDaoImpl implements RefreshTokenDao{
 
     @Override
     public void delete(RefreshToken refreshToken) {
+        mongoTemplate.remove(refreshToken);
 
     }
 

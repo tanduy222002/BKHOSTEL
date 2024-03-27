@@ -1,23 +1,19 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
 
-import com.BKHOSTEL.BKHOSTEL.Anotation.ValidStatus;
 import com.BKHOSTEL.BKHOSTEL.Dto.ProcessPaymentResponseDto;
-import com.BKHOSTEL.BKHOSTEL.Dto.RechargePaginationDto;
-import com.BKHOSTEL.BKHOSTEL.Entity.Recharge;
+import com.BKHOSTEL.BKHOSTEL.Dto.PaginationDto;
 import com.BKHOSTEL.BKHOSTEL.Service.Client.ClientRechargeService;
 import com.BKHOSTEL.BKHOSTEL.Service.RechargeService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/recharges")
@@ -35,6 +31,7 @@ public class RechargeController {
 
     @ResponseBody
     @GetMapping("/payment_url")
+    @Operation(summary = "Get payment url that navigate to VNPAY GATEWAY")
     public ResponseEntity<?> doPaymentProcess(HttpServletRequest req, HttpServletResponse res, @RequestParam @Min(value = 10000,message = "So tien nap toi thieu 10000 vnd") int amount) throws Exception {
         String paymentUrl= clientRechargeService.processRecharge(req,res);
         return ResponseEntity.ok(new ProcessPaymentResponseDto(paymentUrl));
@@ -42,10 +39,11 @@ public class RechargeController {
 
     @ResponseBody
     @GetMapping("")
+    @Operation(summary = "Get recharges with filter and pagination")
     public ResponseEntity<?> getAllRecharges(@RequestParam(required = false) String userId,@RequestParam(required = false) String status,
                                              @Min(5) @RequestParam(defaultValue = "5", required = false) int size,
                                              @Min(1) @RequestParam(defaultValue = "1",required = false) int pageIndex) {
-        RechargePaginationDto recharges= rechargeService.getAllRecharge(userId,status,size,pageIndex);
+        PaginationDto recharges= rechargeService.getAllRecharge(userId,status,size,pageIndex);
         return ResponseEntity.ok(recharges);
     }
 

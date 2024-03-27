@@ -33,7 +33,13 @@ public class UserService {
         this.encoder = encoder;
         this.imageService = imageService;
     }
+    public void updateUser(User user){
+        userDaoImpl.save(user);
+    }
 
+    public void deleteUserById(String id){
+        userDaoImpl.findAndDeleteUserById(id);
+    }
     public static User getCurrentUserByAuthContextWithId(String Id){
 
         User user= getUserByAuthContext();
@@ -41,6 +47,15 @@ public class UserService {
             throw new UserIdMisMatchException();
         }
         return user;
+    }
+
+    public void changeUserStatus(String userId, String newStatus){
+        User user =userDaoImpl.findById(userId);
+        if(user == null)
+            throw new UserNotFoundException("User not found: "  + userId);
+        user.setStatus(newStatus);
+        userDaoImpl.save(user);
+
     }
 
     public double getUserBalance(String userId){

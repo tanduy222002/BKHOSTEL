@@ -1,21 +1,17 @@
 package com.BKHOSTEL.BKHOSTEL.RestController;
-import com.BKHOSTEL.BKHOSTEL.Dto.AuthRequest;
-import com.BKHOSTEL.BKHOSTEL.Dto.AuthResponse;
-import com.BKHOSTEL.BKHOSTEL.Dto.RefreshTokenResponse;
+import com.BKHOSTEL.BKHOSTEL.Dto.*;
 
-import com.BKHOSTEL.BKHOSTEL.Dto.SignUpRequest;
 import com.BKHOSTEL.BKHOSTEL.Entity.District;
+import com.BKHOSTEL.BKHOSTEL.Entity.Otp;
 import com.BKHOSTEL.BKHOSTEL.Entity.RentalService;
-import com.BKHOSTEL.BKHOSTEL.Service.AuthService;
+import com.BKHOSTEL.BKHOSTEL.Service.*;
 import com.BKHOSTEL.BKHOSTEL.Service.Client.ImageService;
-import com.BKHOSTEL.BKHOSTEL.Service.LocationService;
-import com.BKHOSTEL.BKHOSTEL.Service.RefreshTokenService;
-import com.BKHOSTEL.BKHOSTEL.Service.RentalServiceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +26,6 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping(value = "/auth")
-
 public class AuthController {
     private ImageService imageService;
     private LocationService locationService;
@@ -38,31 +33,35 @@ public class AuthController {
 
     private RentalServiceService rentalService;
     private RefreshTokenService refreshTokenService;
+
+    private ForgotPasswordService forgotPasswordService;
     @Autowired
-    public AuthController(RentalServiceService rentalService,LocationService locationService, ImageService imageService, AuthService authService, RefreshTokenService refreshTokenService) {
-        this.authService = authService; this.refreshTokenService=refreshTokenService;
+    public AuthController(ImageService imageService, LocationService locationService, AuthService authService, RentalServiceService rentalService, RefreshTokenService refreshTokenService, ForgotPasswordService forgotPasswordService) {
         this.imageService = imageService;
         this.locationService = locationService;
+        this.authService = authService;
         this.rentalService = rentalService;
+        this.refreshTokenService = refreshTokenService;
+        this.forgotPasswordService = forgotPasswordService;
     }
 
     @PostMapping("/sign-in")
     @Operation(summary = "Get json web token by authentication")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Sign in successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AuthResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Invalid information",
-                    content = @Content),
-//            @ApiResponse(responseCode = "401", description = "Authorities is not authorized",
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Sign in successfully",
+//                    content = { @Content(mediaType = "application/json",
+//                            schema = @Schema(implementation = AuthResponse.class)) }),
+//            @ApiResponse(responseCode = "400", description = "Invalid information",
 //                    content = @Content),
-//            @ApiResponse(responseCode = "403", description = "User is not allowed to access this resource",
+////            @ApiResponse(responseCode = "401", description = "Authorities is not authorized",
+////                    content = @Content),
+////            @ApiResponse(responseCode = "403", description = "User is not allowed to access this resource",
+////                    content = @Content),
+//            @ApiResponse(responseCode = "404", description = "User is not found",
 //                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "User is not found",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal  Server Error",
-                    content = @Content)
-    })
+//            @ApiResponse(responseCode = "500", description = "Internal  Server Error",
+//                    content = @Content)
+//    })
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
         System.out.println("authenticateUser controller");
         AuthResponse authResponse = authService.authenticateUser(authRequest.getUsername(), authRequest.getPassword());
@@ -70,6 +69,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
+    @Operation(summary = "Create a new account")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         AuthResponse authResponse = authService.signUp(signUpRequest.getUserName(),
                 signUpRequest.getPassword(),
@@ -78,31 +78,45 @@ public class AuthController {
         return ResponseEntity.ok(authResponse);
     }
     @PostMapping("/refresh-token")
+    @Operation(summary = "Get a new refresh token")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody String refreshToken) {
         RefreshTokenResponse response= refreshTokenService.refreshToken(refreshToken);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/test_img")
-    public String uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        imageService.upLoadImageWithFile(file);
-        return "ok";
+    @PostMapping("/otps")
+    @Operation(summary = "Send request otp to get otp code by sending email address")
+    public ResponseEntity<?> requestOtp(@Valid @RequestBody GenerateOtpRequestDto otpRequest) throws Exception {
+        Otp otp=forgotPasswordService.generateOtpAndSendByEmail(otpRequest);
+        GenerateOtpResponseDto res = new GenerateOtpResponseDto(otp.getExpiredDate(),"Otp is sent to email address: "+otpRequest.getIdentifier());
+        return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/test_img_64")
-    public String uploadImageBase64(@RequestBody String base64Img) throws IOException {
-        imageService.upLoadImageWithBase64(base64Img);
-        return "ok";
-    }
-    @GetMapping("test_districts")
-    public List<District> getDistrict() throws IOException {
-        return locationService.getAllDistricts();
+
+
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PutMapping("/password")
+    @Operation(summary = "Renew password with token got from verify otp")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordDto) {
+        String message = forgotPasswordService.resetPassword(
+                resetPasswordDto.getNewPassword(),
+                resetPasswordDto.getCode(),
+                resetPasswordDto.getIdentifier()
+        );
+        ResetPasswordResponseDto res = new ResetPasswordResponseDto(message);
+        return ResponseEntity.ok(res);
+
     }
 
-    @PostMapping("test_services")
-    public ResponseEntity<?> createService(@Valid @RequestBody RentalService rentalService) throws IOException {
-        String message=this.rentalService.createService(rentalService);
-        return ResponseEntity.ok(message);
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/log-out")
+    @Operation(summary = "log out account")
+    public ResponseEntity<?> logout() {
+        authService.logOut();
+        return ResponseEntity.ok("Logout successfully");
+
     }
+
 
 }

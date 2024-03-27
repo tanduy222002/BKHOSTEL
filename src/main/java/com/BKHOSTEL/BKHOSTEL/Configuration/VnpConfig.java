@@ -1,7 +1,6 @@
-package com.BKHOSTEL.BKHOSTEL.Service.Client;
+package com.BKHOSTEL.BKHOSTEL.Configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

@@ -1,5 +1,6 @@
 package com.BKHOSTEL.BKHOSTEL.Service;
 
+import com.BKHOSTEL.BKHOSTEL.DAO.RefreshTokenDao;
 import com.BKHOSTEL.BKHOSTEL.Dto.AuthResponse;
 import com.BKHOSTEL.BKHOSTEL.Entity.RefreshToken;
 import com.BKHOSTEL.BKHOSTEL.Entity.Role;
@@ -37,17 +38,18 @@ public class AuthService {
 
     RefreshTokenService refreshTokenService;
 
+    RefreshTokenDao refreshTokenDao;
+
     @Autowired
-    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService, RefreshTokenDao refreshTokenDao) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.jwtTokenService = jwtTokenService;
         this.refreshTokenService = refreshTokenService;
+        this.refreshTokenDao = refreshTokenDao;
     }
-
-
 
     @Transactional
     public AuthResponse authenticateUser (String userName, String password){
@@ -109,6 +111,16 @@ public class AuthService {
                 refreshToken.getToken(),
                 "Signup successfully");
 
+    }
+
+    @Transactional
+    public void logOut(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = UserService.getUserByAuthContext();
+        RefreshToken token = user.getRefreshToken();
+        user.setRefreshToken(null);
+        refreshTokenDao.delete(token);
+        userRepository.save(user);
     }
     public void checkValidRole(List<String> roles){
         List<String> acceptedRole = Arrays.asList("ROLE_USER", "ROLE_ADMIN", "ROLE_MANAGER");

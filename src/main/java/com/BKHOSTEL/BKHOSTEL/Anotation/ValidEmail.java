@@ -4,7 +4,6 @@ import com.BKHOSTEL.BKHOSTEL.Validator.ValidEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-
 import java.lang.annotation.*;
 
 @Constraint(validatedBy = ValidEmailValidator.class)

@@ -19,13 +19,13 @@ public class RentalService {
     private String category;
 
     @NotNull(message = "Daily price is mandatory")
-    private double dailyPrice;
+    private Double dailyPrice;
 
     @NotNull(message = "Weekly price is mandatory")
-    private double weeklyPrice;
+    private Double weeklyPrice;
 
     @NotNull(message = "Monthly price is mandatory")
-    private double monthlyPrice;
+    private Double monthlyPrice;
 
     @NotBlank(message = "Description is mandatory")
     private String desc;

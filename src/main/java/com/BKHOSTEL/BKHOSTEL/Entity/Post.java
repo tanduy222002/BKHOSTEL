@@ -2,6 +2,9 @@ package com.BKHOSTEL.BKHOSTEL.Entity;
 
 import com.BKHOSTEL.BKHOSTEL.Dto.CreatePostDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.NullSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,13 +33,18 @@ public class Post {
     private String phoneNum;
     private String status;
     private List<String> assets;
+
     @DocumentReference(lazy = true)
     private User createdBy;
+
     @DocumentReference(lazy = true)
     private User approvedBy;
+
     @DocumentReference(lazy = true)
     private RentalService serviceType;
+
     private Date createDate;
+    private Date expiredDate;
 
     public Post(CreatePostDto dto) {
         this.area=dto.getArea();
@@ -48,4 +56,6 @@ public class Post {
         this.price=dto.getPrice();
         this.title=dto.getTitle();
     }
+
+
 }
