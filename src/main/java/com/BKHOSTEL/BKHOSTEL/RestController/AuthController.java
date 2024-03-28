@@ -118,5 +118,13 @@ public class AuthController {
 
     }
 
+    @PostMapping("/verify-otp")
+    @Operation(summary = "Verify otp that sent to email and get token using for reset password")
+    public ResponseEntity<?> verifyOtp(@RequestBody @Valid VerifyOtpRequestDto reqDto ) {
+        String token= forgotPasswordService.verifyOtp(reqDto.getCode(), reqDto.getIdentifier());
+        return ResponseEntity.ok(new VerifyOtpResponseDto(token));
+
+    }
+
 
 }
