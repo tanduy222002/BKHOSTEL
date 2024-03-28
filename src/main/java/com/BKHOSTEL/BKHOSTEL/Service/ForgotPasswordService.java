@@ -6,9 +6,11 @@ import com.BKHOSTEL.BKHOSTEL.Dto.EmailDetailDto;
 import com.BKHOSTEL.BKHOSTEL.Dto.GenerateOtpRequestDto;
 import com.BKHOSTEL.BKHOSTEL.Entity.Otp;
 import com.BKHOSTEL.BKHOSTEL.Entity.User;
+import com.BKHOSTEL.BKHOSTEL.Exception.InvalidRequestException;
 import com.BKHOSTEL.BKHOSTEL.Exception.NotFoundException;
 import com.BKHOSTEL.BKHOSTEL.Exception.OtpException;
 import com.BKHOSTEL.BKHOSTEL.Service.Client.EmailService;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,18 +44,19 @@ public class ForgotPasswordService {
     private PasswordEncoder encoder;
 
     @Autowired
-    public ForgotPasswordService(EmailService emailServiceImpl, UserDao userDaoImpl, OtpDao otpDaoImpl, JwtTokenService jwtTokenService) {
+    public ForgotPasswordService(EmailService emailServiceImpl, UserDao userDaoImpl, OtpDao otpDaoImpl, JwtTokenService jwtTokenService, PasswordEncoder encoder) {
         this.emailServiceImpl = emailServiceImpl;
         this.userDaoImpl = userDaoImpl;
         this.otpDaoImpl = otpDaoImpl;
         this.jwtTokenService = jwtTokenService;
+        this.encoder = encoder;
     }
 
     @Transactional
-    public Otp generateOtpAndSendByEmail(GenerateOtpRequestDto otpRequest) throws Exception{
-        Otp otp = generateOtp(otpRequest.getIdentifier());
+    public void SendOtpByEmail(Otp otp,String email) throws IOException {
+
         EmailDetailDto emailDetailDto = new EmailDetailDto();
-        emailDetailDto.setRecipient(otpRequest.getIdentifier());
+        emailDetailDto.setRecipient(email);
         emailDetailDto.setSubject("Otp for reset password");
         ClassPathResource resource = new ClassPathResource("templates/generate-otp-template.html");
         InputStream inputStream = resource.getInputStream();
@@ -61,15 +64,11 @@ public class ForgotPasswordService {
         try (Scanner scanner = new Scanner(inputStream).useDelimiter("\\A")) {
             htmlContent= scanner.hasNext() ? scanner.next() : "";
         }
-        // Read the HTML template into a String variable
-//        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
-//        String absolutePath = currentPath.toAbsolutePath().toString();
-//        String htmlContent = readHtmlTemplateFromFile(absolutePath);
+
         htmlContent=htmlContent.replace("{User}", emailDetailDto.getRecipient());
         htmlContent=htmlContent.replace("{OTP}",otp.getCode());
         emailDetailDto.setMsgBody(htmlContent);
         emailServiceImpl.sendEmailWithHtmlContent(emailDetailDto);
-        return otp;
 
     }
 
@@ -81,10 +80,13 @@ public class ForgotPasswordService {
         return new String(bytes, StandardCharsets.UTF_8);
     }
     @Transactional
-    public Otp generateOtp(String email){
-        User user = userDaoImpl.findByEmail(email);
+    public Otp generateOtp(String identifier, String userName) throws IOException{
+        User user = userDaoImpl.findByUserName(userName);
         if (user == null){
-            throw new NotFoundException("Email not found");
+            throw new NotFoundException("User not found");
+        }
+        if(!user.getEmail().equals(identifier)){
+            throw new InvalidRequestException("Email mismatch with username");
         }
 
         String code = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
@@ -104,15 +106,21 @@ public class ForgotPasswordService {
         otpDaoImpl.save(otp);
         user.setOtp(otp);
         userDaoImpl.save(user);
+        SendOtpByEmail(otp,identifier);
         return otp;
     }
+
 
     public String verifyOtp(String otpCode,String identifier){
         User user =userDaoImpl.findByEmail(identifier);
         if (user == null){
             throw new NotFoundException("Email not found");
         }
+
         Otp otp =user.getOtp();
+        if(!otpCode.equals(otp.getCode())){
+            throw new InvalidRequestException("otp is not correct");
+        }
         if(otp.getExpiredDate().getTime()<System.currentTimeMillis()){
             throw new OtpException("Otp was expired");
         }
@@ -126,7 +134,7 @@ public class ForgotPasswordService {
 
     }
     @Transactional
-    public String resetPassword(String newPassword, @NotBlank(message = "Otp code must not be blank") String code, @NotBlank(message = "Identifier that used to get otp must not be blank") String identifier) {
+    public String resetPassword(String newPassword) {
         User user=UserService.getUserByAuthContext();
         user.setPassword(encoder.encode(newPassword));
         userDaoImpl.save(user);

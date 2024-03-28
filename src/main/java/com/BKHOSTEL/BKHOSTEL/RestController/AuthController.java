@@ -87,7 +87,7 @@ public class AuthController {
     @PostMapping("/otps")
     @Operation(summary = "Send request otp to get otp code by sending email address")
     public ResponseEntity<?> requestOtp(@Valid @RequestBody GenerateOtpRequestDto otpRequest) throws Exception {
-        Otp otp=forgotPasswordService.generateOtpAndSendByEmail(otpRequest);
+        Otp otp=forgotPasswordService.generateOtp(otpRequest.getIdentifier(),otpRequest.getUserName());
         GenerateOtpResponseDto res = new GenerateOtpResponseDto(otp.getExpiredDate(),"Otp is sent to email address: "+otpRequest.getIdentifier());
         return ResponseEntity.ok(res);
     }
@@ -100,9 +100,7 @@ public class AuthController {
     @Operation(summary = "Renew password with token got from verify otp")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordDto) {
         String message = forgotPasswordService.resetPassword(
-                resetPasswordDto.getNewPassword(),
-                resetPasswordDto.getCode(),
-                resetPasswordDto.getIdentifier()
+                resetPasswordDto.getNewPassword()
         );
         ResetPasswordResponseDto res = new ResetPasswordResponseDto(message);
         return ResponseEntity.ok(res);

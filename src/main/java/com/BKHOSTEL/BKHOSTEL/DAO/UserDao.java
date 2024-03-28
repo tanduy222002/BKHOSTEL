@@ -11,6 +11,8 @@ public interface UserDao {
     public void findAndDeleteUserById(String userId);
 
     public User findById(String userId);
+
+    public User findByUserName(String userName);
     public User findByEmail(String email);
     public User save(User user);
 }

@@ -1,6 +1,7 @@
 package com.BKHOSTEL.BKHOSTEL.Dto;
 
 import com.BKHOSTEL.BKHOSTEL.Anotation.MatchingPassword;
+import com.BKHOSTEL.BKHOSTEL.Anotation.StrongPassword;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -19,14 +20,11 @@ import lombok.NoArgsConstructor;
 public class ResetPasswordRequestDto {
     @NotBlank(message = "Please enter new password")
     @JsonProperty("new_password")
+    @StrongPassword
     private String newPassword;
     @JsonProperty("confirm_new_password")
     @NotBlank(message ="Please confirm new password")
+    @StrongPassword
     private String confirmNewPassword;
 
-    @NotBlank(message = "Otp code must not be blank")
-    private String code;
-    @Schema( example = "tanduy222002@gmail.com", required = true,description = "The identifier that used to get otp code")
-    @NotBlank(message = "Identifier that used to get otp must not be blank")
-    private String identifier;
 }

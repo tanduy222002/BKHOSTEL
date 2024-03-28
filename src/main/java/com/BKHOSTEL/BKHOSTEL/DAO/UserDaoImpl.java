@@ -43,6 +43,13 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
+    public User findByUserName(String userName) {
+        Query query = new Query(Criteria.where("userName").is(userName));
+        return mongoTemplate.findOne(query, User.class);
+
+    }
+
+    @Override
     public User getUserProfileById(String userId) {
         Query query = new Query(Criteria.where("_id").is(userId));
         query.fields().include("name", "userName","email","phone","avatar","fullName","role","status");
@@ -52,7 +59,6 @@ public class UserDaoImpl implements UserDao{
     @Override
     public User findByEmail(String email) {
         Query query = new Query(Criteria.where("email").is(email));
-        query.fields().include("name", "userName","email","phone","avatar","fullName","role","status");
         return mongoTemplate.findOne(query, User.class);
     }
 }

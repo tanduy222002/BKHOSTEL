@@ -14,6 +14,10 @@ public class GenerateOtpRequestDto {
     @NotBlank(message = "Identifier for otp is required")
     @Schema( example = "tanduy222002@gmail.com", required = true)
     private String identifier;
+    @NotBlank(message = "Identifier for otp is required")
+    @Schema( example = "tanduy222002@gmail.com", required = true)
+    @JsonProperty("user_name")
+    private String userName;
     @Schema( example = "email", required = false)
     @JsonProperty("delivery_method")
     private String deliveryMethod ="email";

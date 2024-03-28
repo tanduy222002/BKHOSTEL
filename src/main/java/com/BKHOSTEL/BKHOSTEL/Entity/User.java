@@ -49,7 +49,7 @@ public class User {
     @DocumentReference(lazy = false)
     private RefreshToken refreshToken;
 
-    @DocumentReference(lazy = false)
+    @DocumentReference(lazy = true)
     private Otp otp;
 
 //    @Version
