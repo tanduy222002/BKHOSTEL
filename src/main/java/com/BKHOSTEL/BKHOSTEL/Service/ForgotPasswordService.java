@@ -12,16 +12,19 @@ import com.BKHOSTEL.BKHOSTEL.Service.Client.EmailService;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.Scanner;
 
 @Service
 public class ForgotPasswordService {
@@ -52,10 +55,16 @@ public class ForgotPasswordService {
         EmailDetailDto emailDetailDto = new EmailDetailDto();
         emailDetailDto.setRecipient(otpRequest.getIdentifier());
         emailDetailDto.setSubject("Otp for reset password");
+        ClassPathResource resource = new ClassPathResource("templates/generate-otp-template.html");
+        InputStream inputStream = resource.getInputStream();
+        String htmlContent;
+        try (Scanner scanner = new Scanner(inputStream).useDelimiter("\\A")) {
+            htmlContent= scanner.hasNext() ? scanner.next() : "";
+        }
         // Read the HTML template into a String variable
-        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
-        String absolutePath = currentPath.toAbsolutePath().toString();
-        String htmlContent = readHtmlTemplateFromFile(absolutePath);
+//        Path currentPath = Paths.get( "src", "main", "resources","templates", "generate-otp-template.html");
+//        String absolutePath = currentPath.toAbsolutePath().toString();
+//        String htmlContent = readHtmlTemplateFromFile(absolutePath);
         htmlContent=htmlContent.replace("{User}", emailDetailDto.getRecipient());
         htmlContent=htmlContent.replace("{OTP}",otp.getCode());
         emailDetailDto.setMsgBody(htmlContent);
